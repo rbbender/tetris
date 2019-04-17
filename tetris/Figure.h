@@ -22,14 +22,15 @@ struct STFigurePos {
 	int size_y;
 	int size_x;
 	const int layout[4][4];
+	const int left_border[4];
+	const int right_border[4];
+	const int bottom_border[4];
 };
 
 typedef std::vector<STFigurePos*> VTFigurePos;
 typedef VTFigurePos::const_iterator VTFigurePosIt;
 
 class CFigure {
-	int pos_x;
-	int pos_y;
 	ENTFigureType tp;
 	const VTFigurePos& positions;
 	VTFigurePosIt cur_pos;
@@ -42,6 +43,9 @@ public:
 	VTFigurePosIt prev_pos();
 
 	VTFigurePosIt get_pos();
+
+	VTFigurePosIt peek_next_pos();
+	VTFigurePosIt peek_prev_pos();
 
 	int get_pos_x();
 	int get_pos_y();
