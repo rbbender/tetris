@@ -1,25 +1,24 @@
 #include <iostream>
 #include "Figure.h"
 #include "Field.h"
+#include "Game.h"
+#include "StaticScreen.h"
 
-Field* fld;
-
-void print_dbg() {
-	std::cout << "-------------------------------\n";
-	fld->dbg_print();
-	std::cout << "-------------------------------\n";
-	std::cout << "Can move left? ---> " << fld->can_move_left() << std::endl;
-	std::cout << "Can move right? ---> " << fld->can_move_right() << std::endl;
-	std::cout << "Is landed? ---> " << fld->is_landed() << std::endl;
-}
 
 int main() {
 	load_positions();
 	print_positions();
-
-	fld = new Field;
-
-	CFigure fig(FIG_R, 0, fld);
+	//StaticScreen scr;
+	//scr.draw();
+	if (GetGameInstance().initialize() != 0) {
+		std::cout << "Error initializing game\n";
+		getchar();
+		return 1;
+	}
+	GetGameInstance().start_game();
+	GetGameInstance().main_loop();
+	//getchar();
+/*	CFigure fig(FIG_R, 0, fld);
 	fld->set_current_figure(&fig, 7, 5);
 	print_dbg();
 	fld->move_right();
@@ -48,6 +47,6 @@ int main() {
 	print_dbg();
 	fld->rotate_ccw();
 	print_dbg();
-
-	getchar();
+	fld->force_land();
+	print_dbg(); */
 }

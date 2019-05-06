@@ -1,26 +1,69 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.539
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tetris", "tetris\tetris.vcxproj", "{FAE2CB89-8123-4E06-8E5D-8E486726BECC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E} = {1364FFCD-693A-3DB0-B974-E05EA057B11E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw", "glfw\build\src\glfw.vcxproj", "{1364FFCD-693A-3DB0-B974-E05EA057B11E}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glm_static", "glm\build\glm\glm_static.vcxproj", "{E8610947-82C8-3B36-832F-2F7CB8DB6B79}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
+		MinSizeRel|x64 = MinSizeRel|x64
+		MinSizeRel|x86 = MinSizeRel|x86
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
+		RelWithDebInfo|x64 = RelWithDebInfo|x64
+		RelWithDebInfo|x86 = RelWithDebInfo|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Debug|x64.ActiveCfg = Debug|x64
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Debug|x64.Build.0 = Debug|x64
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Debug|x86.ActiveCfg = Debug|Win32
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Debug|x86.Build.0 = Debug|Win32
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.MinSizeRel|x64.ActiveCfg = Release|x64
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.MinSizeRel|x64.Build.0 = Release|x64
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.MinSizeRel|x86.ActiveCfg = Release|Win32
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.MinSizeRel|x86.Build.0 = Release|Win32
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Release|x64.ActiveCfg = Release|x64
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Release|x64.Build.0 = Release|x64
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Release|x86.ActiveCfg = Release|Win32
 		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.Release|x86.Build.0 = Release|Win32
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.RelWithDebInfo|x64.ActiveCfg = Release|x64
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.RelWithDebInfo|x64.Build.0 = Release|x64
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.RelWithDebInfo|x86.ActiveCfg = Release|Win32
+		{FAE2CB89-8123-4E06-8E5D-8E486726BECC}.RelWithDebInfo|x86.Build.0 = Release|Win32
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Debug|x64.ActiveCfg = Debug|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Debug|x64.Build.0 = Debug|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Debug|x86.ActiveCfg = Debug|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.MinSizeRel|x86.ActiveCfg = MinSizeRel|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Release|x64.ActiveCfg = Release|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Release|x64.Build.0 = Release|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.Release|x86.ActiveCfg = Release|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{1364FFCD-693A-3DB0-B974-E05EA057B11E}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Debug|x64.ActiveCfg = Debug|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Debug|x64.Build.0 = Debug|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Debug|x86.ActiveCfg = Debug|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.MinSizeRel|x64.ActiveCfg = MinSizeRel|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.MinSizeRel|x64.Build.0 = MinSizeRel|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.MinSizeRel|x86.ActiveCfg = MinSizeRel|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Release|x64.ActiveCfg = Release|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Release|x64.Build.0 = Release|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.Release|x86.ActiveCfg = Release|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.RelWithDebInfo|x64.ActiveCfg = RelWithDebInfo|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.RelWithDebInfo|x64.Build.0 = RelWithDebInfo|x64
+		{E8610947-82C8-3B36-832F-2F7CB8DB6B79}.RelWithDebInfo|x86.ActiveCfg = RelWithDebInfo|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

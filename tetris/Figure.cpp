@@ -5,11 +5,10 @@ static std::vector<VTFigurePos> FIG_POSITIONS(FIG_COUNT);
 
 static std::vector<std::string> FIG_TYPE_STR = { "SQUARE", "LINE", "Z", "REV_Z", "R", "REV_R", "T" };
 
-CFigure::CFigure(ENTFigureType fig_type, int pos_num, Field* fld) :
+CFigure::CFigure(ENTFigureType fig_type, int pos_num) :
 		tp(fig_type),
 		positions(FIG_POSITIONS[fig_type]),
-		cur_pos(positions.cbegin() + pos_num),
-		fld(fld)
+		cur_pos(positions.cbegin() + pos_num)
 	{};
 
 VTFigurePosIt CFigure::next_pos() {
@@ -274,12 +273,22 @@ void print_positions() {
 	printf("LOADED POSITIONS:\n");
 	for (unsigned i = 0; i < FIG_COUNT; ++i) {
 		printf("Type: %s\n", fig_type_to_str((ENTFigureType)i).c_str());
-		CFigure f((ENTFigureType)i, 0, nullptr);
+		CFigure f((ENTFigureType)i, 0);
 		for (int k = 0; k < FIG_POSITIONS[i].size(); ++k) {
 			f.print_pos();
 			printf("\n");
 			f.next_pos();
 		}
 	}
+}
+
+int get_figure_count()
+{
+	return FIG_COUNT;
+}
+
+int get_figure_pos_count(ENTFigureType tp)
+{
+	return FIG_POSITIONS[tp].size();
 }
 

@@ -34,9 +34,8 @@ class CFigure {
 	ENTFigureType tp;
 	const VTFigurePos& positions;
 	VTFigurePosIt cur_pos;
-	Field* fld;
 public:
-	CFigure(ENTFigureType fig_type, int pos_num, Field* fld);
+	CFigure(ENTFigureType fig_type, int pos_num);
 
 	VTFigurePosIt next_pos();
 
@@ -47,16 +46,14 @@ public:
 	VTFigurePosIt peek_next_pos();
 	VTFigurePosIt peek_prev_pos();
 
-	int get_pos_x();
-	int get_pos_y();
-	void set_pos_x(int x);
-	void set_pos_y(int y);
-
 	void print_pos();
 };
 
 const std::string& fig_type_to_str(ENTFigureType tp);
 int load_positions();
 void print_positions();
+
+int get_figure_count();
+int get_figure_pos_count(ENTFigureType tp);
 
 
