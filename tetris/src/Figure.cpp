@@ -53,6 +53,10 @@ void CFigure::print_pos() {
 	}
 };
 
+GLFigure* CFigure::get_gl_fig() {
+	return (*cur_pos)->p_glfigure;
+}
+
 static STFigurePos FIG_POS_SQUARE[] = { {2, 2, 
 								{{1, 1, 0, 0},
 								 {1, 1, 0, 0},
@@ -252,20 +256,36 @@ const std::string& fig_type_to_str(ENTFigureType tp) {
 }
 
 int load_positions() {
+	STFigurePos* p;
 	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_SQUARE]; ++i)
-		FIG_POSITIONS[FIG_SQUARE].push_back(&FIG_POS_SQUARE[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_LINE]; ++i)
-		FIG_POSITIONS[FIG_LINE].push_back(&FIG_POS_LINE[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_Z]; ++i)
-		FIG_POSITIONS[FIG_Z].push_back(&FIG_POS_Z[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_REV_Z]; ++i)
-		FIG_POSITIONS[FIG_REV_Z].push_back(&FIG_POS_REV_Z[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_R]; ++i)
-		FIG_POSITIONS[FIG_R].push_back(&FIG_POS_R[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_REV_R]; ++i)
-		FIG_POSITIONS[FIG_REV_R].push_back(&FIG_POS_REV_R[i]);
-	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_T]; ++i)
-		FIG_POSITIONS[FIG_T].push_back(&FIG_POS_T[i]);
+	{
+		p = &FIG_POS_SQUARE[i];
+		FIG_POSITIONS[FIG_SQUARE].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_LINE]; ++i) {
+		p = &FIG_POS_LINE[i];
+		FIG_POSITIONS[FIG_LINE].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_Z]; ++i) {
+		p = &FIG_POS_Z[i];
+		FIG_POSITIONS[FIG_Z].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_REV_Z]; ++i) {
+		p = &FIG_POS_REV_Z[i];
+		FIG_POSITIONS[FIG_REV_Z].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_R]; ++i) {
+		p = &FIG_POS_R[i];
+		FIG_POSITIONS[FIG_R].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_REV_R]; ++i) {
+		p = &FIG_POS_REV_R[i];
+		FIG_POSITIONS[FIG_REV_R].push_back(p);
+	}
+	for (unsigned i = 0; i < FIG_POS_COUNTS[FIG_T]; ++i) {
+		p = &FIG_POS_T[i];
+		FIG_POSITIONS[FIG_T].push_back(p);
+	}
 	return 0;
 };
 
@@ -289,6 +309,11 @@ int get_figure_count()
 
 int get_figure_pos_count(ENTFigureType tp)
 {
-	return FIG_POSITIONS[tp].size();
+	return (int)FIG_POSITIONS[tp].size();
+}
+
+const STFigurePos* get_figure_position(ENTFigureType tp, unsigned nm)
+{
+	return FIG_POSITIONS[tp][nm];
 }
 

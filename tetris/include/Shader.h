@@ -1,5 +1,5 @@
 #pragma once
-#include <glad/glad.h>
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <string>
 #include <vector>
@@ -25,6 +25,7 @@ public:
 	int Compile();
 	GLuint GetGLId() const { return hndlGLObj; };
 	int GetId() const { return idx; };
+	int Cleanup();
 	const std::string GetRepr();
 	SHADER_TYPE GetType() const { return sh_type; };
 	std::vector<std::string> GetUniforms();

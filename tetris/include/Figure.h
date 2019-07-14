@@ -6,6 +6,7 @@
 #include <string>
 
 class Field;
+class GLFigure;
 
 enum ENTFigureType {
 	FIG_SQUARE,
@@ -25,6 +26,7 @@ struct STFigurePos {
 	const int left_border[4];
 	const int right_border[4];
 	const int bottom_border[4];
+	GLFigure* p_glfigure;
 };
 
 typedef std::vector<STFigurePos*> VTFigurePos;
@@ -47,6 +49,7 @@ public:
 	VTFigurePosIt peek_prev_pos();
 
 	void print_pos();
+	GLFigure* get_gl_fig();
 };
 
 const std::string& fig_type_to_str(ENTFigureType tp);
@@ -55,5 +58,6 @@ void print_positions();
 
 int get_figure_count();
 int get_figure_pos_count(ENTFigureType tp);
+const STFigurePos* get_figure_position(ENTFigureType tp, unsigned nm);
 
 

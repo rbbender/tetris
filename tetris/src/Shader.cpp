@@ -30,7 +30,7 @@ int Shader::Compile()
 		std::cout << GetRepr() << ":FAILED TO CREATE GL OBJ" << std::endl;
 		return -1;
 	}
-	std::cout << GetRepr() << "GL OBJ CREATED: " << hndlGLObj << std::endl;
+	std::cout << GetRepr() << ":GL OBJ CREATED: " << hndlGLObj << std::endl;
 	const char* sh_src = src.c_str();
 	glShaderSource(hndlGLObj, 1, &sh_src, nullptr);
 	glCompileShader(hndlGLObj);
@@ -40,10 +40,21 @@ int Shader::Compile()
 		char msg[1024];
 		glGetShaderInfoLog(hndlGLObj, sizeof(msg), nullptr, msg);
 		std::cout << GetRepr() << ":Failed to compile: " << msg;
+		Cleanup();
 		return -4;
 	}
 	std::cout << GetRepr() << ":Compiled"
 		<< std::endl;
+	return 0;
+}
+
+int Shader::Cleanup()
+{
+	if (!hndlGLObj)
+		return 0;
+	glDeleteShader(hndlGLObj);
+	hndlGLObj = 0;
+	std::cout << GetRepr() << ":GL object Deleted" << std::endl;
 	return 0;
 }
 
@@ -61,9 +72,7 @@ std::vector<std::string> Shader::GetUniforms()
 
 Shader::~Shader()
 {
-	if (hndlGLObj)
-		glDeleteShader(hndlGLObj);
-	hndlGLObj = 0;
+	Cleanup();
 	std::cout << GetRepr() << ":DELETED" << std::endl;
 }
 

@@ -86,11 +86,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>.\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\glfw\include;$(ProjectDir)\include</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)\glfw\build\src\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,33 +123,47 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Field.cpp" />
-    <ClCompile Include="FieldRenderer.cpp" />
-    <ClCompile Include="Figure.cpp" />
-    <ClCompile Include="Game.cpp" />
-    <ClCompile Include="glad.c" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="StaticScreen.cpp" />
+    <ProjectReference Include="..\..\..\..\Documents\repos\glwork\glfw\build\src\glfw.vcxproj">
+      <Project>{7e2bea90-1dea-3283-8105-246192592b55}</Project>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Field.h" />
-    <ClInclude Include="FieldRenderer.h" />
-    <ClInclude Include="Figure.h" />
-    <ClInclude Include="Game.h" />
-    <ClInclude Include="IField.h" />
-    <ClInclude Include="Program.h" />
-    <ClInclude Include="Shader.h" />
-    <ClInclude Include="StaticScreen.h" />
+    <ClInclude Include="include\Field.h" />
+    <ClInclude Include="include\FieldRenderer.h" />
+    <ClInclude Include="include\Figure.h" />
+    <ClInclude Include="include\Game.h" />
+    <ClInclude Include="include\glad\glad.h" />
+    <ClInclude Include="include\GLBlock.h" />
+    <ClInclude Include="include\GLDefs.h" />
+    <ClInclude Include="include\GLFigure.h" />
+    <ClInclude Include="include\GLTetrisCompoundFigure.h" />
+    <ClInclude Include="include\GLTexture.h" />
+    <ClInclude Include="include\IField.h" />
+    <ClInclude Include="include\KHR\khrplatform.h" />
+    <ClInclude Include="include\Program.h" />
+    <ClInclude Include="include\Shader.h" />
+    <ClInclude Include="include\StaticScreen.h" />
+    <ClInclude Include="include\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fragment.txt" />
-    <Text Include="vertex.txt" />
+    <ClCompile Include="src\Field.cpp" />
+    <ClCompile Include="src\FieldRenderer.cpp" />
+    <ClCompile Include="src\Figure.cpp" />
+    <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\GLBlock.cpp" />
+    <ClCompile Include="src\GLFigure.cpp" />
+    <ClCompile Include="src\GLTetrisCompoundFigure.cpp" />
+    <ClCompile Include="src\GLTexture.cpp" />
+    <ClCompile Include="src\IGLObject.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Program.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\StaticScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="simple.frag" />
-    <None Include="simple.vert" />
+    <None Include="shaders\block.frag" />
+    <None Include="shaders\block.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

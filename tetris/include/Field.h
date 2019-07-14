@@ -14,6 +14,7 @@ class Field : public IField {
 	bool to_redraw;
 	std::vector<Row> field;
 	CFigure* cur_figure;
+	unsigned int cur_color;
 	typedef std::vector<Row>::iterator y_itr;
 	bool is_position_possible(const STFigurePos& ps, int p_x, int p_y);
 	bool test_landed(int p_x, int p_y);
@@ -33,6 +34,7 @@ public:
 	Field(int size_x = 10, int size_y = 20);
 	void dbg_print();
 	int set_current_figure(CFigure* fig, int pos_x, int pos_y);
+	void set_current_color(unsigned int color);
 	int force_land();
 	int move_right();
 	int move_left();
@@ -43,6 +45,9 @@ public:
 	int get_value(int x, int y);
 	bool is_redraw_required();
 	void redraw_completed();
+	CFigure* get_current_figure();
+	int get_cur_x();
+	int get_cur_y();
 
 	// main "tic" method
 	void make_step();

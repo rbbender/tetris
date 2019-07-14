@@ -15,7 +15,6 @@ bool Field::is_position_possible(const STFigurePos& ps, int p_x, int p_y)
 				ps.layout[i][k] == 1)
 				return false;
 	return true;
-	return false;
 }
 
 Field::Field(int size_x, int size_y) :
@@ -77,7 +76,7 @@ int Field::on_figure_landed()
 {
 	int rows = 0;
 	remove_current_figure();
-	merge_current_figure(1);
+	merge_current_figure(cur_color);
 	for (int i = cur_pos_y; i < cur_pos_y + (*(cur_figure->get_pos()))->size_y; ++i)
 		if (is_row_complete(i)) {
 			++rows;
@@ -93,7 +92,7 @@ bool Field::can_move_right()
 	STFigurePos* cur_pos = *(cur_figure->get_pos());
 	for (int i = 0; i < cur_pos->size_y; ++i) {
 		int candidate_x = cur_pos_x + cur_pos->right_border[i] + 1;
-		if ((candidate_x >= SZ_X) || (field[cur_pos_y + i][candidate_x] == 1))
+		if ((candidate_x >= SZ_X) || (field[cur_pos_y + i][candidate_x] != 0))
 			return false;
 	}
 	return true;
@@ -106,12 +105,10 @@ bool Field::can_move_left()
 	STFigurePos* cur_pos = *(cur_figure->get_pos());
 	for (int i = 0; i < cur_pos->size_y; ++i) {
 		int candidate_x = cur_pos_x + cur_pos->left_border[i] - 1;
-		if ((candidate_x < 0) || (field[cur_pos_y + i][candidate_x] == 1))
+		if ((candidate_x < 0) || (field[cur_pos_y + i][candidate_x] != 0))
 			return false;
 	}
 	return true;
-
-	return false;
 }
 
 bool Field::can_rotate_cw()
@@ -185,6 +182,11 @@ int Field::set_current_figure(CFigure* fig, int pos_x, int pos_y) {
 	cur_pos_y = pos_y;
 	merge_current_figure();
 	return 0;
+}
+
+void Field::set_current_color(unsigned int color)
+{
+	cur_color = color;
 }
 
 int Field::force_land()
@@ -295,4 +297,18 @@ STEP_RESULT Field::step_result(int& lines)
 		}
 	}
 	return res;
+}
+
+CFigure* Field::get_current_figure() {
+	return cur_figure;
+}
+
+int Field::get_cur_x()
+{
+	return cur_pos_x;
+}
+
+int Field::get_cur_y()
+{
+	return cur_pos_y;
 }

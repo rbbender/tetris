@@ -124,9 +124,9 @@ GLint Program::GetUniformLocation(std::string s_uniform_name)
 void Program::CleanupShaders()
 {
 	if (pVertexShader)
-		delete pVertexShader;
+		pVertexShader->Cleanup();
 	if (pFragmentShader)
-		delete pFragmentShader;
+		pFragmentShader->Cleanup();
 	pVertexShader = nullptr;
 	pFragmentShader = nullptr;
 }

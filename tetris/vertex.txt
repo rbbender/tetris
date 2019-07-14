@@ -1,8 +1,0 @@
-#version 330 core
-layout (location = 0) in vec2 aPos;
-uniform ivec2 simple_c;
-
-void main()
-{
-	gl_Position = vec4((simple_c.x * 20 + aPos.x) / 320 - 1.0, (simple_c.y * 20 + aPos.y)/-240 + 1.0, 0, 1);
-}

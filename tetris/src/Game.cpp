@@ -1,18 +1,11 @@
 #include "Game.h"
 #include "Shader.h"
+#include "Figure.h"
+#include "GLFigure.h"
+#include "GLBlock.h"
 #include <vec3.hpp>
-#include <mat3x3.hpp>
 
 static Game* instance;
-
-const int BLK_SZ = 20;
-
-static int block[] = {0,	  0,
-					  BLK_SZ, 0,
-					  0,	  BLK_SZ,
-					  BLK_SZ, 0,
-					  BLK_SZ, BLK_SZ,
-					  0,	  BLK_SZ};
 
 Game& GetGameInstance() {
 	if (nullptr == instance) {
@@ -23,36 +16,66 @@ Game& GetGameInstance() {
 
 Game::Game():
 	score(0),
-	size_px_x(DEF_SZ_X),
-	size_px_y(DEF_SZ_Y),
+	m_block_sz(20),
+	m_sz_x_blocks(32),
+	m_sz_y_blocks(24),
+	size_px_x(m_sz_x_blocks * m_block_sz),
+	size_px_y(m_sz_y_blocks * m_block_sz),
 	current_tic(0),
 	advance_velocity(0),
 	advance_tic(0),
 	wnd(nullptr),
 	fld(nullptr),
 	current_fig(nullptr),
-	next_fig(nullptr)
+	next_fig(nullptr),
+	VAO(),
+	VBO(),
+	program(nullptr),
+	pProgramFrame(nullptr),
+	m_textures(m_color_count)
 {
 }
 
 void Game::wnd_key_callback(GLFWwindow* pWnd, int key, int scancode, int action, int mods)
 {
-	if (GLFW_PRESS == action) {
+	if (GLFW_PRESS == action || GLFW_REPEAT == action) {
 		GetGameInstance().process_input(key);
 	}
 }
 
-int Game::initialize(int sz_px_x, int sz_px_y)
+int Game::load_resources()
 {
-	// initializing GLFW window
-	if (!glfwInit()) {
-		std::cout << "ERROR: unable to initialize GLFW\n";
-		return -1;
+	char sFileName[256] = { 0 };
+	for (int i = 0; i < m_color_count; ++i)
+	{
+		snprintf(sFileName, 256, "resources\\tile_%d.png", i);
+		std::cout << "Loading texture " << sFileName << std::endl;
+		m_textures[i] = new GLTexture;
+		if (false == m_textures[i]->LoadTexture(sFileName))
+			return 1;
+		m_textures[i]->SetCoords({ 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 
+									1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f });
+		if (m_textures[i]->LoadToGL())
+			return 2;
+		std::cout << "Loaded texture" << std::endl;
 	}
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	GetBlockInstance().SetTextureCoords(*m_textures[0]);
+	GetBlockInstance().LoadToGL();
+	Shader* vertex_sh = LoadShaderFromFile(SH_T_VERTEX, "shaders\\block.vert", {"simple_c"});
+	Shader* fragment_sh = LoadShaderFromFile(SH_T_FRAGMENT, "shaders\\block.frag", { });
+	program = new Program(*vertex_sh, *fragment_sh);
+	if (program->Link()) {
+		std::cout << "Unable to link block shader program\n";
+		return 3;
+	}
+	program->CleanupShaders();
+	delete vertex_sh;
+	delete fragment_sh;
+	return 0;
+}
+
+int Game::init_window() {
+	// initializing GLFW window
 	wnd = glfwCreateWindow(size_px_x, size_px_y, "MegaTetris", nullptr, nullptr);
 	if (!wnd) {
 		glfwTerminate();
@@ -66,26 +89,27 @@ int Game::initialize(int sz_px_x, int sz_px_y)
 		glfwTerminate();
 		return -3;
 	}
+	return 0;
+}
+
+void Game::use_color(unsigned col)
+{
+	m_textures[col - 1]->Use();
+}
+
+int Game::initialize()
+{
+	if (init_window())
+		return 1;
+	if (load_resources())
+		return 2;
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwSetKeyCallback(wnd, wnd_key_callback);
 	auto seed = glfwGetTimerValue();
 	std::srand(seed);
 	std::cout << "Initialized with seed " << seed << std::endl;
-	Shader* vertex_sh = LoadShaderFromFile(SH_T_VERTEX, "vertex.txt", {"simple_c"});
-	Shader* fragment_sh = LoadShaderFromFile(SH_T_FRAGMENT, "fragment.txt", { "color" });
-	program = new Program(*vertex_sh, *fragment_sh);
-	if (program->Link()) {
-		std::cout << "Unable to link shader program\n";
-		return -4;
-	}
-	program->CleanupShaders();
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glBindVertexArray(VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(block), block, GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_INT, GL_FALSE, 0, (void*)0);
+	glViewport(20, 20, 220, 420);
+
 	return 0;
 }
 
@@ -137,6 +161,9 @@ void Game::update_state()
 		fld->set_current_figure(next_fig, 4, 0);
 		delete current_fig;
 		current_fig = next_fig;
+		current_color = next_color;
+		fld->set_current_color(current_color);
+		next_color = generate_color();
 		next_fig = generate_figure();
 		advance_tic = current_tic + advance_velocity - diff;
 		break;
@@ -151,24 +178,31 @@ void Game::update_state()
 
 void Game::redraw()
 {
-	glViewport(0, 0, 640, 480);
 	glClear(GL_COLOR_BUFFER_BIT);
+	//glViewport(280, 320, 120, 120);
+	//program->Use();
+	//m_textures[next_color]->Use();
+	//next_fig->get_gl_fig()->Render();
+
+	glViewport(20, 20, size_px_x, size_px_y);
 	program->Use();
-	glBindVertexArray(VAO);
-	GLint col_loc = program->GetUniformLocation("color");
 	GLint c_loc = program->GetUniformLocation("simple_c");
-	glUniform3f(col_loc, 1.0f, 1.0f, 1.0f);
-	//if (fld->is_redraw_required()) {
+
 	for (int y = 3; y < fld->get_size_y(); ++y)
 		for (int x = 0; x < fld->get_size_x(); ++x)
-			if (fld->get_value(x, y) != 0) {
-				glUniform2i(c_loc, x, y);
-				glDrawArrays(GL_TRIANGLES, 0, 6);
-		}
-
-
-		//fld->redraw_completed();
-	//}
+			if (fld->get_value(x, y) != 0)
+			{
+				glUniform2i(c_loc, x, y - 3);
+				if (fld->get_value(x, y) != 9) 
+				{
+					use_color(fld->get_value(x, y));
+				}
+				else
+				{
+					use_color(current_color);
+				}
+				GetBlockInstance().Render();
+			}
 	glfwSwapBuffers(wnd);
 }
 
@@ -203,6 +237,11 @@ CFigure* Game::generate_figure()
 	return new CFigure(tp, pos);
 }
 
+unsigned int Game::generate_color()
+{
+	return std::rand() % m_color_count + 1;
+}
+
 void Game::start_game()
 {
 	if (fld)
@@ -212,8 +251,11 @@ void Game::start_game()
 	advance_tic = (unsigned)FPS;
 	advance_velocity = (unsigned)FPS;
 	current_fig = generate_figure();
+	current_color = generate_color();
 	next_fig = generate_figure();
+	next_color = generate_color();
 	fld->set_current_figure(current_fig, 4, 0);
+	fld->set_current_color(current_color);
 }
 
 void Game::stop_game()
@@ -230,3 +272,4 @@ Game::~Game()
 		glfwDestroyWindow(wnd);
 	glfwTerminate();
 }
+
