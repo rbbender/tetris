@@ -3,7 +3,7 @@
 #include "Figure.h"
 #include "GLFigure.h"
 #include "GLBlock.h"
-#include <vec3.hpp>
+#include "GLFrame.h"
 
 static Game* instance;
 
@@ -21,6 +21,10 @@ Game::Game():
 	m_sz_y_blocks(24),
 	size_px_x(m_sz_x_blocks * m_block_sz),
 	size_px_y(m_sz_y_blocks * m_block_sz),
+	m_fld_blk_x(10),
+	m_fld_blk_y(20),
+	m_fld_sz_x(m_block_sz * m_fld_blk_x),
+	m_fld_sz_y(m_block_sz * m_fld_blk_y),
 	current_tic(0),
 	advance_velocity(0),
 	advance_tic(0),
@@ -28,12 +32,15 @@ Game::Game():
 	fld(nullptr),
 	current_fig(nullptr),
 	next_fig(nullptr),
-	VAO(),
-	VBO(),
 	program(nullptr),
 	pProgramFrame(nullptr),
-	m_textures(m_color_count)
+	m_textures(m_color_count),
+	m_model(1.0f),
+	m_view(1.0f)
 {
+	m_model = glm::scale(m_model, glm::vec3(m_block_sz, m_block_sz, m_block_sz));
+	m_view = glm::translate(m_view, glm::vec3(-1.0f, 1.0f, 0.0f));
+	m_view = glm::scale(m_view, glm::vec3(2.0f / m_fld_sz_x, -2.0f / m_fld_sz_y, 1.0f));
 }
 
 void Game::wnd_key_callback(GLFWwindow* pWnd, int key, int scancode, int action, int mods)
@@ -61,7 +68,10 @@ int Game::load_resources()
 	}
 	GetBlockInstance().SetTextureCoords(*m_textures[0]);
 	GetBlockInstance().LoadToGL();
-	Shader* vertex_sh = LoadShaderFromFile(SH_T_VERTEX, "shaders\\block.vert", {"simple_c"});
+
+	GetFrameObject().LoadToGL();
+
+	Shader* vertex_sh = LoadShaderFromFile(SH_T_VERTEX, "shaders\\block_mat.vert", {"model", "view"});
 	Shader* fragment_sh = LoadShaderFromFile(SH_T_FRAGMENT, "shaders\\block.frag", { });
 	program = new Program(*vertex_sh, *fragment_sh);
 	if (program->Link()) {
@@ -71,6 +81,25 @@ int Game::load_resources()
 	program->CleanupShaders();
 	delete vertex_sh;
 	delete fragment_sh;
+
+	program->Use();
+	GLint v_loc = program->GetUniformLocation("view");
+	glUniformMatrix4fv(v_loc, 1, GL_FALSE, glm::value_ptr(m_view));
+
+
+	Shader* frameVertShader = LoadShaderFromFile(SH_T_VERTEX, "shaders\\frame.vert", {});
+	Shader* frameFragShader = LoadShaderFromFile(SH_T_FRAGMENT, "shaders\\frame.frag", { "aColor" });
+	pProgramFrame = new Program(*frameVertShader, *frameFragShader);
+	if (pProgramFrame->Link()) {
+		std::cout << "Unable to link frame shader program\n";
+		return 4;
+	}
+	pProgramFrame->CleanupShaders();
+	pProgramFrame->Use();
+	GLint col_loc = pProgramFrame->GetUniformLocation("aColor");
+	glUniform3f(col_loc, 1.0f, 1.0f, 1.0f);
+	delete frameVertShader;
+	delete frameFragShader;
 	return 0;
 }
 
@@ -108,7 +137,6 @@ int Game::initialize()
 	auto seed = glfwGetTimerValue();
 	std::srand(seed);
 	std::cout << "Initialized with seed " << seed << std::endl;
-	glViewport(20, 20, 220, 420);
 
 	return 0;
 }
@@ -179,20 +207,21 @@ void Game::update_state()
 void Game::redraw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-	//glViewport(280, 320, 120, 120);
-	//program->Use();
-	//m_textures[next_color]->Use();
-	//next_fig->get_gl_fig()->Render();
 
-	glViewport(20, 20, size_px_x, size_px_y);
+	glViewport(m_block_sz, m_block_sz, m_fld_sz_x, m_fld_sz_y);
+	pProgramFrame->Use();
+	GetFrameObject().Render();
 	program->Use();
-	GLint c_loc = program->GetUniformLocation("simple_c");
+	GLint c_loc = program->GetUniformLocation("model");
+	
+	glm::mat4 model(1.0f);
 
 	for (int y = 3; y < fld->get_size_y(); ++y)
 		for (int x = 0; x < fld->get_size_x(); ++x)
 			if (fld->get_value(x, y) != 0)
 			{
-				glUniform2i(c_loc, x, y - 3);
+				model = m_model * glm::translate(glm::mat4(1.0f), glm::vec3(x, y - 3, 0));
+				glUniformMatrix4fv(c_loc, 1, GL_FALSE, glm::value_ptr(model));
 				if (fld->get_value(x, y) != 9) 
 				{
 					use_color(fld->get_value(x, y));

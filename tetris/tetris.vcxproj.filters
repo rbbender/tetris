@@ -63,6 +63,9 @@
     <ClInclude Include="include\KHR\khrplatform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\GLFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Field.cpp">
@@ -107,12 +110,24 @@
     <ClCompile Include="src\StaticScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\GLFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\block.frag">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="shaders\block.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\block_mat.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\frame.vert">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="shaders\frame.frag">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

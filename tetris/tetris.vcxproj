@@ -86,7 +86,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\glfw\include;$(ProjectDir)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\glfw\include;$(ProjectDir)\include;$(SolutionDir)\glm</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -136,6 +136,7 @@
     <ClInclude Include="include\GLBlock.h" />
     <ClInclude Include="include\GLDefs.h" />
     <ClInclude Include="include\GLFigure.h" />
+    <ClInclude Include="include\GLFrame.h" />
     <ClInclude Include="include\GLTetrisCompoundFigure.h" />
     <ClInclude Include="include\GLTexture.h" />
     <ClInclude Include="include\IField.h" />
@@ -153,6 +154,7 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\GLBlock.cpp" />
     <ClCompile Include="src\GLFigure.cpp" />
+    <ClCompile Include="src\GLFrame.cpp" />
     <ClCompile Include="src\GLTetrisCompoundFigure.cpp" />
     <ClCompile Include="src\GLTexture.cpp" />
     <ClCompile Include="src\IGLObject.cpp" />
@@ -164,6 +166,9 @@
   <ItemGroup>
     <None Include="shaders\block.frag" />
     <None Include="shaders\block.vert" />
+    <None Include="shaders\block_mat.vert" />
+    <None Include="shaders\frame.frag" />
+    <None Include="shaders\frame.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

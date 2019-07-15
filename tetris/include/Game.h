@@ -1,4 +1,7 @@
 #pragma once
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <iostream>
 #include <cstdlib>
 #include <glad/glad.h>
@@ -7,7 +10,6 @@
 #include "Field.h"
 #include "Figure.h"
 #include "Program.h"
-#include <mat4x4.hpp>
 
 class Game
 {
@@ -21,11 +23,13 @@ class Game
 	unsigned m_sz_y_blocks;
 	unsigned size_px_x;
 	unsigned size_px_y;
+	unsigned m_fld_blk_x;
+	unsigned m_fld_blk_y;
+	unsigned m_fld_sz_x;
+	unsigned m_fld_sz_y;
 	unsigned long current_tic;
 	unsigned long advance_tic;
 	unsigned advance_velocity;
-	unsigned VAO[2];
-	unsigned VBO[2];
 	GLFWwindow* wnd;
 	Field* fld;
 	CFigure* current_fig;
@@ -35,8 +39,9 @@ class Game
 	Program* program;
 	Program* pProgramFrame;
 	VTextures m_textures;
-	glm::mat4 m_mat_scale;
-	glm::mat4 m_mat_block;
+
+	glm::mat4	m_model;
+	glm::mat4	m_view;
 
 public:
 	Game();
